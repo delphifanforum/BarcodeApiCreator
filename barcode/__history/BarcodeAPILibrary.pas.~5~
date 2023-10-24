@@ -1,0 +1,67 @@
+unit BarcodeAPILibrary;
+
+interface
+
+uses
+  SysUtils, Classes, Graphics, IdHTTP, IdURI, IdGlobal,Vcl.ExtCtrls;
+
+type
+  TBarcodeAPI = class
+  public
+    class function GenerateBarcode(BarcodeType, Data: string): TStream;
+    class procedure DisplayBarcode(BarcodeType, Data: string; Image: TImage);
+  end;
+
+implementation
+
+{ TBarcodeAPI }
+
+class function TBarcodeAPI.GenerateBarcode(BarcodeType, Data: string): TStream;
+var
+  URL: string;
+  HTTP: TIdHTTP;
+begin
+  URL := 'https://barcodeapi.org/api/' + LowerCase(BarcodeType) + '/' + TIdURI.ParamsEncode(Data);
+  HTTP := TIdHTTP.Create(nil);
+  try
+    Result := TMemoryStream.Create;
+    try
+      HTTP.Request.Accept := 'image/png';
+      HTTP.Get(URL, Result);
+      Result.Position := 0;
+    except
+      Result.Free;
+      raise Exception.Create('Error fetching barcode image from the API.');
+    end;
+  finally
+    HTTP.Free;
+  end;
+end;
+
+class procedure TBarcodeAPI.DisplayBarcode(BarcodeType, Data: string; Image: TImage);
+var
+  BarcodeStream: TStream;
+  Bitmap: TBitmap;
+begin
+  BarcodeStream := GenerateBarcode(BarcodeType, Data);
+  try
+    if (BarcodeStream.Size > 0) then
+    begin
+      Bitmap := TBitmap.Create;
+      try
+        Bitmap.LoadFromStream(BarcodeStream);
+        Image.Picture.Assign(Bitmap);
+      finally
+        Bitmap.Free;
+      end;
+    end
+    else
+    begin
+      raise Exception.Create('Empty or invalid barcode image.');
+    end;
+  finally
+    BarcodeStream.Free;
+  end;
+end;
+
+end.

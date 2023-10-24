@@ -1,0 +1,37 @@
+    unit BarcodeDownloader;
+
+interface
+
+uses
+  SysUtils, Classes, IdHTTP;
+
+type
+  TBarcodeDownloader = class
+  public
+    class function DownloadBarcode(BarcodeType, Data, FileName: string): Boolean;
+  end;
+
+implementation
+
+{ TBarcodeDownloader }
+
+class function TBarcodeDownloader.DownloadBarcode(BarcodeType, Data, FileName: string): Boolean;
+var
+  URL: string;
+  HTTP: TIdHTTP;
+begin
+  URL := 'https://barcodeapi.org/api/' + LowerCase(BarcodeType) + '/' + TIdURI.ParamsEncode(Data);
+  HTTP := TIdHTTP.Create(nil);
+  try
+    try
+      HTTP.Get(URL, FileName);
+      Result := True;
+    except
+      Result := False;
+    end;
+  finally
+    HTTP.Free;
+  end;
+end;
+
+end.

@@ -1,0 +1,44 @@
+unit Main;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,BarcodeAPILibrary;
+
+type
+  TForm16 = class(TForm)
+    cbb1: TComboBox;
+    ed1: TEdit;
+    btn1: TButton;
+    img1: TImage;
+    lbl1: TLabel;
+    lbl11: TLabel;
+    procedure btn1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form16: TForm16;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm16.btn1Click(Sender: TObject);
+begin
+begin
+  if TBarcodeDownloader.DownloadBarcode('qr', 'Delphifan', 'gen.png') then
+  begin
+    img1.Picture.LoadFromFile('gen.png'); // Display the downloaded image in your TImage component
+  end
+  else
+  begin
+    ShowMessage('Failed to download the barcode image.');
+  end;
+end;
+
+end.

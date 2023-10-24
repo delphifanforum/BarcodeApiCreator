@@ -1,0 +1,30 @@
+unit Main;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,;
+
+type
+  TForm16 = class(TForm)
+    cbb1: TComboBox;
+    ed1: TEdit;
+    btn1: TButton;
+    img1: TImage;
+    lbl1: TLabel;
+    lbl11: TLabel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form16: TForm16;
+
+implementation
+
+{$R *.dfm}
+
+end.
